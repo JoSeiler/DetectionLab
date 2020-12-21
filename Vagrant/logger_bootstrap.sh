@@ -559,8 +559,8 @@ main() {
   #install_splunk
   download_palantir_osquery_config
   install_fleet_import_osquery_config
-  install_velociraptor
-  install_suricata
+  #install_velociraptor
+  #install_suricata
   install_zeek
   install_guacamole
   postinstall_tasks

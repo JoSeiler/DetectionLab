@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 
 # Functions
 
@@ -73,17 +73,17 @@ apt -y install filebeat=$VERSION &> /dev/null
 #ToDo Filebeat config
 # Install Packetbeat
 #echo "[$(DATE)] [Info] [Packetbeat] Installing Packetbeat..."
-#apt -y install libpcap0.8 &> /dev/null
-#apt -y install packetbeat=$VERSION &> /dev/null
+apt -y install libpcap0.8 &> /dev/null
+apt -y install packetbeat=$VERSION &> /dev/null
 # Install Metricbeat
-#echo "[$(DATE)] [Info] [Metricbeat] Installing Metricbeat..."
-#apt -y install metricbeat=$VERSION &> /dev/null
+echo "[$(DATE)] [Info] [Metricbeat] Installing Metricbeat..."
+apt -y install metricbeat=$VERSION &> /dev/null
 # Install Heartbeat
-#echo "[$(DATE)] [Info] [Heartbeat] Installing Heartbeat..."
-#apt -y install heartbeat-elastic=$VERSION &> /dev/null
+echo "[$(DATE)] [Info] [Heartbeat] Installing Heartbeat..."
+apt -y install heartbeat-elastic=$VERSION &> /dev/null
 # Install Auditbeat
-#echo "[$(DATE)] [Info] [Auditbeat] Installing Auditbeat..."
-#apt -y install auditbeat=$VERSION &> /dev/null
+echo "[$(DATE)] [Info] [Auditbeat] Installing Auditbeat..."
+apt -y install auditbeat=$VERSION &> /dev/null
 
 # Tidying Up
 # Clean unneeded packages
