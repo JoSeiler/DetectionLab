@@ -2,11 +2,11 @@
 
 # ---------------------------------- Cluster -----------------------------------
 #
-cluster.name: detection-lab-cluster
+cluster.name: seclab
 #
 # ------------------------------------ Node ------------------------------------
 #
-node.name: ${HOSTNAME}
+node.name: \${HOSTNAME}
 node.roles: [ master, data, ingest, transform ]
 # ----------------------------------- Paths ------------------------------------
 #
@@ -19,7 +19,7 @@ bootstrap.memory_lock: true
 #
 # ---------------------------------- Network -----------------------------------
 #
-network.host: _eth1:ipv4
+network.host: _eth1:ipv4_   # bind to IPv4 addresses of interface eth1
 http.port: 9200
 #
 # --------------------------------- Discovery ----------------------------------
@@ -34,7 +34,8 @@ xpack.license.self_generated.type: basic
 xpack.monitoring.enabled: true
 xpack.monitoring.collection.enabled: true
 # Security
-xpack.security.enabled: false
+xpack.security.enabled: true
+xpack.security.authc.api_key.enabled: true
 # Audit
 xpack.security.audit.enabled: false
 # More Apps

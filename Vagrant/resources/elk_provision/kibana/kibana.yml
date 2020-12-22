@@ -5,21 +5,15 @@ server.port: 5601
 server.host: "192.168.38.105"
 
 # Elasticsearch Nodes
-elasticsearch.hosts: "http://192.168.38.105:9200"
+elasticsearch.hosts: ["http://192.168.38.105:9200"]
 
-# Encryption Keys
-xpack.security.encryptionKey: "ovswhfannlajtgvvjewqwgulywdbpudq"
-xpack.reporting.encryptionKey: "mevhrpewrtunoakriahdyzowlqlvhjou"
-xpack.encryptedSavedObjects.encryptionKey: "ubadnnhnuvgyrxveohfgyxpxokbkdwge"
+# Specify file where Kibana stores log output
+logging.dest: "/var/log/kibana.log"
 
 # Monitoring
 monitoring.enabled: true
 monitoring.ui.enabled: true
 monitoring.kibana.collection.enabled: true
-
-# Security
-xpack.security.enabled: false
-xpack.security.secureCookies: false
 
 # Audit
 xpack.security.audit.enabled: false
@@ -42,3 +36,8 @@ xpack.searchprofiler.enabled: true
 vis_type_timelion.enabled: true
 xpack.graph.enabled: false
 xpack.ml.enabled: false
+
+# Security
+xpack.security.enabled: true
+xpack.security.secureCookies: false
+elasticsearch.username: "kibana_system"
