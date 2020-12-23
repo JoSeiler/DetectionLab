@@ -82,11 +82,11 @@ touch /var/log/kibana.log
 chown kibana:kibana /var/log/kibana.log
 
 # Copy config
-echo "[$(DATE)] [Info] [Kibana] Copy config"
+echo "[$(DATE)] [Info] [Kibana] Copy config..."
 cp -R $PROVISION_FOLDER/kibana/* /etc/kibana &> /dev/null
 
 # Add Kibana security requirements
-echo "[$(DATE)] [Info] [Kibana] Add Kibana security requirements"
+echo "[$(DATE)] [Info] [Kibana] Add Kibana security requirements..."
 printf 'elasticsearch.password: \"' >>/etc/kibana/kibana.yml
 printf %s  ${KIBANA_SYS_PASS##*=}\" >>/etc/kibana/kibana.yml
 printf '\nxpack.encryptedSavedObjects.encryptionKey: \"' >>/etc/kibana/kibana.yml
@@ -105,20 +105,51 @@ apt -y install logstash=1:$VERSION-1 &> /dev/null
 systemctl enable logstash &> /dev/null
 
 # ------------------------------ Beats Family ----------------------------------
+
+# ------------------------------- Filebeat -------------------------------------
 # Install Filebeat
 echo "[$(DATE)] [Info] [Filebeat] Installing Filebeat..."
 apt -y install filebeat=$VERSION &> /dev/null
-#ToDo Filebeat config
+
+# Copy config
+echo "[$(DATE)] [Info] [Filebeat] Copy config..."
+cp -R $PROVISION_FOLDER/filebeat/* /etc/filebeat &> /dev/null
+
+# Add Filebeat security requirements
+echo "[$(DATE)] [Info] [Filebeat] Add Filebeat security requirements..."
+printf '  password: \"' >>/etc/filebeat/filebeat.yml
+printf %s  ${ELASTIC_PASS##*=}\" >>/etc/filebeat/filebeat.yml
+
+# Set custom paths for the log files
+mkdir /var/log/zeek/; ln -s /opt/zeek/logs/current/ /var/log/zeek/current
+
+
+# Enable data collection modules
+filebeat --path.config /etc/filebeat modules enable osquery zeek suricata
+
+# Reload daemon and restart Filebeat
+echo "[$(DATE)] [Info] [Filebeat] Reload daemon and restart Filebeat..."
+systemctl daemon-reload &> /dev/null
+systemctl enable filebeat &> /dev/null
+service filebeat restart &> /dev/null
+
+# ------------------------------ Packetbeat ------------------------------------
 # Install Packetbeat
 #echo "[$(DATE)] [Info] [Packetbeat] Installing Packetbeat..."
 apt -y install libpcap0.8 &> /dev/null
 apt -y install packetbeat=$VERSION &> /dev/null
+
+# ------------------------------ Metricbeat ------------------------------------
 # Install Metricbeat
 echo "[$(DATE)] [Info] [Metricbeat] Installing Metricbeat..."
 apt -y install metricbeat=$VERSION &> /dev/null
+
+# ------------------------------ Heartbeat -------------------------------------
 # Install Heartbeat
 echo "[$(DATE)] [Info] [Heartbeat] Installing Heartbeat..."
 apt -y install heartbeat-elastic=$VERSION &> /dev/null
+
+# ------------------------------ Auditbeat -------------------------------------
 # Install Auditbeat
 echo "[$(DATE)] [Info] [Auditbeat] Installing Auditbeat..."
 apt -y install auditbeat=$VERSION &> /dev/null
