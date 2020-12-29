@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#!/bin/bash
 
 # Functions
 
@@ -55,9 +55,9 @@ EOF
 # Copy config, reload daemon and restart Elasticsearch
 echo "[$(DATE)] [Info] [Elasticsearch] Copy config, reload daemon and restart Elasticsearch..."
 cp -R $PROVISION_FOLDER/elasticsearch/* /etc/elasticsearch/ &> /dev/null
-systemctl daemon-reload &> /dev/null
-systemctl enable elasticsearch  &> /dev/null
-service elasticsearch restart  &> /dev/null
+/bin/systemctl daemon-reload &> /dev/null
+/bin/systemctl enable elasticsearch.service  &> /dev/null
+/bin/systemctl start elasticsearch.service  &> /dev/null
 
 # Generate randmoly-generated passwords and store them in variables for later use
 # elasticsearch has to be running before this can be ran
@@ -94,15 +94,16 @@ printf %s  ${KIBANA_UUID}\" >>/etc/kibana/kibana.yml
 
 # Reload daemon and restart Kibana
 echo "[$(DATE)] [Info] [Kibana] Reload daemon and restart Kibana..."
-systemctl daemon-reload &> /dev/null
-systemctl enable kibana &> /dev/null
-service kibana restart &> /dev/null
+/bin/systemctl daemon-reload &> /dev/null
+/bin/systemctl enable kibana.service &> /dev/null
+/bin/systemctl start kibana.service &> /dev/null
 
 # --------------------------------- Logstash -----------------------------------
 # Install Logstash
 echo "[$(DATE)] [Info] [Logstash] Installing Logstash..."
 apt -y install logstash=1:$VERSION-1 &> /dev/null
-systemctl enable logstash &> /dev/null
+/bin/systemctl enable logstash.service &> /dev/null
+#/bin/systemctl start logstash.service &> /dev/null
 
 # ------------------------------ Beats Family ----------------------------------
 
@@ -131,7 +132,7 @@ filebeat --path.config /etc/filebeat modules enable osquery zeek suricata
 echo "[$(DATE)] [Info] [Filebeat] Reload daemon and restart Filebeat..."
 systemctl daemon-reload &> /dev/null
 systemctl enable filebeat &> /dev/null
-service filebeat restart &> /dev/null
+systemctl start filebeat &> /dev/null
 
 # ------------------------------ Packetbeat ------------------------------------
 # Install Packetbeat
