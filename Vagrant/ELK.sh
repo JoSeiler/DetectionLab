@@ -13,7 +13,7 @@ IP=`ip -o addr show up primary scope global | while read -r num dev fam addr res
 # Set package version
 VERSION="7.10.1"
 # Set provision folder
-PROVISION_FOLDER="/tmp"
+PROVISION_FOLDER="/vagrant/resources/elk_provision"
 
 # Let's go
 
@@ -53,7 +53,7 @@ LimitMEMLOCK=infinity
 EOF
 
 # Copy config, reload daemon and restart Elasticsearch
-echo "[$(DATE)] [Info] [Elasticsearch] Copy config, reload daemon and restart Elasticsearch..."
+echo "[$(DATE)] [Info] [Elasticsearch] Copy config, reload daemon and start Elasticsearch..."
 cp -R $PROVISION_FOLDER/elasticsearch/* /etc/elasticsearch/ &> /dev/null
 /bin/systemctl daemon-reload &> /dev/null
 /bin/systemctl enable elasticsearch.service  &> /dev/null
@@ -64,11 +64,10 @@ cp -R $PROVISION_FOLDER/elasticsearch/* /etc/elasticsearch/ &> /dev/null
 echo "[$(DATE)] [Info] [Elasticsearch] Generate passwords..."
 mkdir /opt/kibana/
 yes | /usr/share/elasticsearch/bin/elasticsearch-setup-passwords auto >> /opt/kibana/kibana_passwords.txt
-mkdir -p /vagrant/resources/kibana
-cp /opt/kibana/kibana_passwords.txt /vagrant/resources/kibana/
+cp /opt/kibana/kibana_passwords.txt $PROVISION_FOLDER/kibana/
 
 KIBANA_SYS_PASS="$(grep -E "kibana_system \S .*" /opt/kibana/kibana_passwords.txt)"
-ELASTIC_PASS="$(grep -E "elastic \S .*" /vagrant/resources/kibana/kibana_passwords.txt)"
+ELASTIC_PASS="$(grep -E "elastic \S .*" $PROVISION_FOLDER/kibana/kibana_passwords.txt)"
 KIBANA_UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
 # ----------------------------------- Kibana -----------------------------------
@@ -93,7 +92,7 @@ printf '\nxpack.encryptedSavedObjects.encryptionKey: \"' >>/etc/kibana/kibana.ym
 printf %s  ${KIBANA_UUID}\" >>/etc/kibana/kibana.yml
 
 # Reload daemon and restart Kibana
-echo "[$(DATE)] [Info] [Kibana] Reload daemon and restart Kibana..."
+echo "[$(DATE)] [Info] [Kibana] Reload daemon and start Kibana..."
 /bin/systemctl daemon-reload &> /dev/null
 /bin/systemctl enable kibana.service &> /dev/null
 /bin/systemctl start kibana.service &> /dev/null
@@ -103,7 +102,7 @@ echo "[$(DATE)] [Info] [Kibana] Reload daemon and restart Kibana..."
 echo "[$(DATE)] [Info] [Logstash] Installing Logstash..."
 apt -y install logstash=1:$VERSION-1 &> /dev/null
 /bin/systemctl enable logstash.service &> /dev/null
-#/bin/systemctl start logstash.service &> /dev/null
+/bin/systemctl start logstash.service &> /dev/null
 
 # ------------------------------ Beats Family ----------------------------------
 
@@ -114,7 +113,7 @@ apt -y install filebeat=$VERSION &> /dev/null
 
 # Copy config
 echo "[$(DATE)] [Info] [Filebeat] Copy config..."
-cp -R $PROVISION_FOLDER/filebeat/* /etc/filebeat &> /dev/null
+cp -R $PROVISION_FOLDER/filebeat/filebeat.yml /etc/filebeat/filebeat.yml &> /dev/null
 
 # Add Filebeat security requirements
 echo "[$(DATE)] [Info] [Filebeat] Add Filebeat security requirements..."
@@ -122,14 +121,14 @@ printf '  password: \"' >>/etc/filebeat/filebeat.yml
 printf %s  ${ELASTIC_PASS##*=}\" >>/etc/filebeat/filebeat.yml
 
 # Set custom paths for the log files
-mkdir /var/log/zeek/; ln -s /opt/zeek/logs/current/ /var/log/zeek/current
-
+#mkdir /var/log/zeek/; ln -s /opt/zeek/logs/current/ /var/log/zeek/current
+cp $PROVISION_FOLDER/filebeat/zeek.yml.disabled /etc/filebeat/modules.d/zeek.yml.disabled
 
 # Enable data collection modules
-filebeat --path.config /etc/filebeat modules enable osquery zeek suricata
+filebeat --path.config /etc/filebeat modules enable osquery zeek #suricata
 
-# Reload daemon and restart Filebeat
-echo "[$(DATE)] [Info] [Filebeat] Reload daemon and restart Filebeat..."
+# Reload daemon and start Filebeat
+echo "[$(DATE)] [Info] [Filebeat] Reload daemon and start Filebeat..."
 systemctl daemon-reload &> /dev/null
 systemctl enable filebeat &> /dev/null
 systemctl start filebeat &> /dev/null
