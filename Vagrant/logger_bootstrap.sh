@@ -347,8 +347,6 @@ install_zeek() {
   zkg refresh
   zkg autoconfig
   zkg install --force salesforce/ja3
-  # Add zeek-agent framework to ZEEKPATH
-  ln -s /home/vagrant/projects/zeek-agent-framework/zeek-agent /opt/zeek/share/zeek/site/zeek-agent
   # Load Zeek scripts
   echo '
   @load protocols/ftp/software
@@ -365,8 +363,6 @@ install_zeek() {
   @load policy/protocols/conn/vlan-logging
   @load policy/protocols/conn/mac-logging
   @load ja3
-  @load zeek-agent
-  @load zeek-agent/queries/auditd
 
   redef Intel::read_files += {
     "/opt/zeek/etc/intel.dat"
@@ -409,16 +405,6 @@ install_zeek() {
     echo "Zeek attempted to start but is not running. Exiting"
     exit 1
   fi
-}
-
-install_zeek_agent_framework() {
-  echo "[$(date +%H:%M:%S)]: Installing zeek-agent-framework..."
-  mkdir -p /home/vagrant/projects/
-  cd /home/vagrant/projects/
-  git clone https://github.com/zeek/zeek-agent-framework
-  # cp -a zeek-agent-framework/zeek-agent $(zeek-config --site_dir)
-  cd /home/vagrant/
-  chown -R vagrant:vagrant projects
 }
 
 install_velociraptor() {
@@ -575,7 +561,6 @@ main() {
   install_fleet_import_osquery_config
   #install_velociraptor
   #install_suricata
-  install_zeek_agent_framework
   install_zeek
   install_guacamole
   postinstall_tasks

@@ -4,6 +4,7 @@ Vagrant.configure("2") do |config|
     cfg.vm.box = "bento/ubuntu-18.04"
     cfg.vm.hostname = "logger"
     cfg.vm.provision :shell, path: "logger_bootstrap.sh"
+    #cfg.vm.provision "file", source: "resources/elk_provision", destination: "/tmp"
     cfg.vm.provision :shell, path: "ELK.sh"
     cfg.vm.network :private_network, ip: "192.168.38.105", gateway: "192.168.38.1", dns: "8.8.8.8"
 
@@ -237,33 +238,6 @@ Vagrant.configure("2") do |config|
       lv.memory = 2048
       lv.cpus = 2
       override.vm.synced_folder '.', '/', type: 'winrm' 
-    end
-  end
-
-  # ------------------------------- Zeek-Agent host --------------------------------
-  config.vm.define "zeekagenthost" do |cfg|
-    cfg.vm.box = "bento/ubuntu-20.04"
-    cfg.vm.hostname = "zeekagenthost"
-    cfg.vm.provision :shell, path: "zeek_agent_bootstrap.sh", args: "192.168.38.106"
-    cfg.vm.network :private_network, ip: "192.168.38.106", gateway: "192.168.38.1", dns: "8.8.8.8"
-
-    cfg.vm.provider "vmware_desktop" do |v, override|
-      v.vmx["displayname"] = "zeekagenthost"
-      v.memory = 2048
-      v.cpus = 2
-      v.gui = true
-    end
-
-    cfg.vm.provider "virtualbox" do |vb, override|
-      vb.name = "zeekagenthost"
-      vb.customize ["modifyvm", :id, "--memory", 2048]
-      vb.customize ["modifyvm", :id, "--cpus", 2]
-      vb.customize ["modifyvm", :id, "--vram", "32"]
-      vb.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
-      vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
-      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-      vb.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
-      vb.gui = true
     end
   end
 end
