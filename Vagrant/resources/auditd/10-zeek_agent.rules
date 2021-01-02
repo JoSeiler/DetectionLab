@@ -1,0 +1,9 @@
+-a exit,always -F arch=b64 -S execve
+-a exit,always -F arch=b64 -S execveat
+-a exit,always -F arch=b64 -S fork
+-a exit,always -F arch=b64 -S vfork
+-a exit,always -F arch=b64 -S clone
+-a exit,always -F arch=b64 -S connect
+-a exit,always -F arch=b64 -S bind
+-a exit,always -F arch=b64 -S open
+-a exit,always -F arch=b64 -S openat
