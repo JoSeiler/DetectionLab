@@ -347,6 +347,8 @@ install_zeek() {
   zkg refresh
   zkg autoconfig
   zkg install --force salesforce/ja3
+  # Set symbolic link to be able to run zeek framework directly out of local respository clone (rather than Zeek's site folder)
+  ln -s /home/vagrant/projects/zeek-agent-framework/zeek-agent /opt/zeek/share/zeek/site/zeek-agent
   # Load Zeek scripts
   echo '
   @load protocols/ftp/software
@@ -363,6 +365,8 @@ install_zeek() {
   @load policy/protocols/conn/vlan-logging
   @load policy/protocols/conn/mac-logging
   @load ja3
+  @load zeek-agent
+  @load zeek-agent/queries/auditd
 
   redef Intel::read_files += {
     "/opt/zeek/etc/intel.dat"
@@ -406,6 +410,16 @@ install_zeek() {
     exit 1
   fi
 }
+
+install_zeek_agent_framework() {
+  echo "[$(date +%H:%M:%S)]: Installing zeek-agent-framework..."
+  mkdir -p /home/vagrant/projects/
+  cd /home/vagrant/projects/
+  git clone https://github.com/zeek/zeek-agent-framework
+  cd /home/vagrant/
+  chown -R vagrant:vagrant projects
+}
+
 
 install_velociraptor() {
   echo "[$(date +%H:%M:%S)]: Installing Velociraptor..."
@@ -547,6 +561,8 @@ postinstall_tasks() {
   #echo export PATH="$PATH:/opt/splunk/bin:/opt/zeek/bin" >>~/.bashrc
   #echo "export SPLUNK_HOME=/opt/splunk" >>~/.bashrc
   echo export PATH="$PATH:/opt/zeek/bin" >>~/.bashrc
+  # Include zeek-agent-framework in ZEEKPATH
+  echo export ZEEKPATH="/home/vagrant/projects/zeek-agent-framework/:$(zeek-config --zeekpath)" >>~/.bashrc
   # Ping DetectionLab server for usage statistics
   curl -s -A "DetectionLab-logger" "https:/ping.detectionlab.network/logger" || echo "Unable to connect to ping.detectionlab.network"
 }
@@ -561,6 +577,7 @@ main() {
   install_fleet_import_osquery_config
   #install_velociraptor
   #install_suricata
+  install_zeek_agent_framework
   install_zeek
   install_guacamole
   postinstall_tasks
