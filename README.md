@@ -5,7 +5,8 @@ It extends the DetectionLab with an [ELK stack](https://www.elastic.co/de/what-i
 * [DetectionLabELK](https://github.com/cyberdefenders/DetectionLabELK): a fork of the DetectionLab with ELK stack instead of Splunk
 * [Security settings for the DetectionLabELK](https://github.com/webhead404/DetectionLabELK): extension of the DetectionLabELK (see the following blog: [Detection Engineering with Elastic Security and DetectionLab](https://medium.com/@paranoidnerd/detection-engineering-with-elastic-security-and-detectionlab-bbe3c0b60046))
 * [Zeek Agent](https://github.com/zeek/zeek-agent): an endpoint monitoring tool (currently only for Linux and macOS) that reports, by default, file, socket, and process events to Zeek (work in progress)
-* [Zeek Agent Framework](https://github.com/zeek/zeek-agent-framework) : Zeek-side framework that communicates with the Zeek Agent instances to perform live queries against the agent's tables
+* [Zeek Agent Framework](https://github.com/zeek/zeek-agent-framework): Zeek-side framework that communicates with the Zeek Agent instances to perform live queries against the agent's tables
+* [DetectionLab with Zeek Agent](https://github.com/Wajihulhassan/DetectionLab): a fork of the DetectionLab with the Zeek Agent and Zeek Agent framework
 
 Two zeek agent instances are installed within the DetectionLab for testing and development purposes: one on the ubu2004 host and one on the win10 host (in progress). 
 Currently, the build type used is the zeek agent standalone version. 
