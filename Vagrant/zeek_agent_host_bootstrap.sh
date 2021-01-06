@@ -114,24 +114,24 @@ install_zeek_agent() {
   cp /vagrant/resources/zeek_agent/config.json /etc/zeek-agent/
   # Create directory where zeek-agent stores log output
   mkdir /var/log/zeek/
-  # Obtain source code
+  # Obtain the source code
   mkdir -p /home/vagrant/projects/ &&
   cd /home/vagrant/projects/
   git clone https://github.com/zeek/zeek-agent --recursive
   # Create build folder
   cd zeek-agent/
   mkdir ./build/
-  # Configure project: option#1 - Configure with the system compiler
+  # Configure the project: option#1 - Configure with the system compiler
   cd  build
   cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DZEEK_AGENT_ENABLE_INSTALL:BOOL=ON -DZEEK_AGENT_ENABLE_TESTS:BOOL=ON -DZEEK_AGENT_ZEEK_COMPATIBILITY:STRING="3.1" /home/vagrant/projects/zeek-agent/
-  # Build project
+  # Build the project
   cmake --build . -j2
   # Start project in the background
   nohup ./zeek-agent &
   # Get PID of last executed command type and assign it to zeek-agent
   bg_pid=$!
   echo "${bg_pid}" > zeek-agent.pid
-  # Run tests
+  # Run the tests
   cmake --build . --target zeek_agent_tes
   cd /home/vagrant/
   chown -R vagrant:vagrant ./projects

@@ -366,6 +366,7 @@ install_zeek() {
   @load policy/protocols/conn/mac-logging
   @load ja3
   @load zeek-agent/examples/auditd
+  @load zeek-agent/examples/osquery
 
   redef Intel::read_files += {
     "/opt/zeek/etc/intel.dat"
