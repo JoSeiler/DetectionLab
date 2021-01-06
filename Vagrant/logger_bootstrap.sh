@@ -355,7 +355,7 @@ install_zeek() {
   @load protocols/smtp/software
   @load protocols/ssh/software
   @load protocols/http/software
-  @load tuning/json-logs
+  @load policy/tuning/json-logs
   @load policy/integration/collective-intel
   @load policy/frameworks/intel/do_notice
   @load frameworks/intel/seen
