@@ -365,8 +365,7 @@ install_zeek() {
   @load policy/protocols/conn/vlan-logging
   @load policy/protocols/conn/mac-logging
   @load ja3
-  @load zeek-agent
-  @load zeek-agent/queries/auditd
+  @load zeek-agent/examples/auditd
 
   redef Intel::read_files += {
     "/opt/zeek/etc/intel.dat"

@@ -1,6 +1,7 @@
 {
   "server_address": "192.168.38.105",
   "server_port": 9999,
+
   "log_folder": "/var/log/zeek",
   "max_queued_row_count": 5000,
   "osquery_extensions_socket": "/var/osquery/osquery.em",

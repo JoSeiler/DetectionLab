@@ -109,38 +109,46 @@ fix_eth1_static_ip() {
 
 install_zeek_agent() {
   echo "[$(date +%H:%M:%S)]: Installing zeek-agent..."
-  # Copy config
+  # Copy agent config
   mkdir /etc/zeek-agent/
   cp /vagrant/resources/zeek_agent/config.json /etc/zeek-agent/
-
   # Create directory where zeek-agent stores log output
-  sudo mkdir /var/log/zeek/
-
+  mkdir /var/log/zeek/
   # Obtain source code
   mkdir -p /home/vagrant/projects/ &&
   cd /home/vagrant/projects/
   git clone https://github.com/zeek/zeek-agent --recursive
-
-  # Configure project
+  # Create build folder
   cd zeek-agent/
   mkdir ./build/
+  # Configure project: option#1 - Configure with the system compiler
   cd  build
   cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DZEEK_AGENT_ENABLE_INSTALL:BOOL=ON -DZEEK_AGENT_ENABLE_TESTS:BOOL=ON -DZEEK_AGENT_ZEEK_COMPATIBILITY:STRING="3.1" /home/vagrant/projects/zeek-agent/
+  # Build project
   cmake --build . -j2
+  # Start project in the background
   nohup ./zeek-agent &
+  # Get PID of last executed command type and assign it to zeek-agent
   bg_pid=$!
   echo "${bg_pid}" > zeek-agent.pid
-
+  # Run tests
+  cmake --build . --target zeek_agent_tes
   cd /home/vagrant/
   chown -R vagrant:vagrant ./projects
 }
 
 install_config_auditd() {
+  # Copy configuration for system calls
   cp /vagrant/resources/auditd/10-zeek_agent.rules /etc/audit/rules.d/
+  # Enable and run auditd daemon
   sudo systemctl enable --now auditd
+  # Set AF UNIX audisp plugin to active
   sudo sed -i 's/no/yes/g' /etc/audisp/plugins.d/af_unix.conf
+  # Copy config
   sudo cp /vagrant/resources/auditd/auditd.conf /etc/audit/
+  # Restart auditd service
   sudo systemctl restart auditd
+  # Enable auditing and raise backlog limit
   sudo auditctl -e1 -b 1024
 }
 
