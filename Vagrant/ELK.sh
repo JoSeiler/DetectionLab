@@ -120,9 +120,11 @@ echo "[$(DATE)] [Info] [Filebeat] Add Filebeat security requirements..."
 printf '  password: \"' >>/etc/filebeat/filebeat.yml
 printf %s  ${ELASTIC_PASS##*=}\" >>/etc/filebeat/filebeat.yml
 
-# Set custom paths for the log files
-#mkdir /var/log/zeek/; ln -s /opt/zeek/logs/current/ /var/log/zeek/current
-cp $PROVISION_FOLDER/filebeat/zeek.yml.disabled /etc/filebeat/modules.d/zeek.yml.disabled
+# Default path where filebeat will look for zeek files is /var/log/zeek/current
+# Set link to actual zeek installation path
+mkdir /var/log/zeek/; ln -s /opt/zeek/logs/current/ /var/log/zeek/current
+# Alternative: set custom paths in zeek.yml.disabled
+#cp $PROVISION_FOLDER/filebeat/zeek.yml.disabled /etc/filebeat/modules.d/zeek.yml.disabled
 
 # Enable data collection modules
 filebeat --path.config /etc/filebeat modules enable osquery zeek #suricata
