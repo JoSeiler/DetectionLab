@@ -129,9 +129,9 @@ filebeat --path.config /etc/filebeat modules enable osquery zeek #suricata
 
 # Reload daemon and start Filebeat
 echo "[$(DATE)] [Info] [Filebeat] Reload daemon and start Filebeat..."
-systemctl daemon-reload &> /dev/null
-systemctl enable filebeat &> /dev/null
-systemctl start filebeat &> /dev/null
+/bin/systemctl daemon-reload &> /dev/null
+/bin/systemctl enable filebeat &> /dev/null
+/bin/systemctl start filebeat &> /dev/null
 
 # ------------------------------ Packetbeat ------------------------------------
 # Install Packetbeat
