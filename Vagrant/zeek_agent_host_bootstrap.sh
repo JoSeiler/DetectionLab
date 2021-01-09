@@ -15,6 +15,9 @@ echo "apt-fast apt-fast/dlflag boolean true" | debconf-set-selections
 
 sed -i "2ideb mirror://mirrors.ubuntu.com/mirrors.txt focal main restricted universe multiverse\ndeb mirror://mirrors.ubuntu.com/mirrors.txt focal-updates main restricted universe multiverse\ndeb mirror://mirrors.ubuntu.com/mirrors.txt focal-backports main restricted universe multiverse\ndeb mirror://mirrors.ubuntu.com/mirrors.txt focal-security main restricted universe multiverse" /etc/apt/sources.list
 
+# Change keyboard layout to German
+L='de' && sudo sed -i 's/XKBLAYOUT=\"\w*"/XKBLAYOUT=\"'$L'\"/g' /etc/default/keyboard
+
 apt_install_prerequisites() {
   echo "[$(date +%H:%M:%S)]: Adding apt repositories..."
   # Add repository for apt-fast
