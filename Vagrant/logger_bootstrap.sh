@@ -350,7 +350,7 @@ install_zeek() {
   zkg refresh
   zkg autoconfig
   zkg install --force salesforce/ja3
-  #zkg install --force json-streaming-logs
+  zkg install --force json-streaming-logs
   # Set symbolic link to be able to run zeek framework directly out of local respository clone (rather than Zeek's site folder)
   ln -s /home/vagrant/projects/zeek-agent-framework/zeek-agent /opt/zeek/share/zeek/site/zeek-agent
   # Load Zeek scripts
