@@ -135,7 +135,7 @@ install_zeek_agent() {
   bg_pid=$!
   echo "${bg_pid}" > zeek-agent.pid
   # Run the tests
-  cmake --build . --target zeek_agent_tes
+  cmake --build . --target zeek_agent_tests
   cd /home/vagrant/
   chown -R vagrant:vagrant ./projects
 }
