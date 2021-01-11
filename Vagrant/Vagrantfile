@@ -240,7 +240,7 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  # ------------------------------- Zeek-Agent host --------------------------------
+  # ------------------------- Zeek-Agent Ubuntu host ---------------------------
   config.vm.define "ubu2004" do |cfg|
     cfg.vm.box = "bento/ubuntu-20.04"
     cfg.vm.hostname = "ubu2004"

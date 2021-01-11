@@ -17,12 +17,13 @@ filebeat.inputs:
 - type: log
 
   # Change to true to enable this input configuration.
-  enabled: false
+  enabled: true
 
   # Paths that should be crawled and fetched. Glob based paths.
   paths:
     - /var/log/auth.log
     - /var/log/syslog
+    - /var/log/zeek/current/json_streaming_*
     #- /var/log/*.log
     #- c:\programdata\elasticsearch\logs\*
 
