@@ -122,9 +122,9 @@ printf %s  ${ELASTIC_PASS##*=}\" >>/etc/filebeat/filebeat.yml
 
 # Default path where filebeat will look for zeek files is /var/log/zeek/current
 # Set link to actual zeek installation path
-mkdir /var/log/zeek/; ln -s /opt/zeek/logs/current/ /var/log/zeek/current
+#mkdir /var/log/zeek/; ln -s /opt/zeek/logs/current/ /var/log/zeek/current
 # Alternative: set custom paths in zeek.yml.disabled
-#cp $PROVISION_FOLDER/filebeat/zeek.yml.disabled /etc/filebeat/modules.d/zeek.yml.disabled
+cp $PROVISION_FOLDER/filebeat/zeek.yml.disabled /etc/filebeat/modules.d/zeek.yml.disabled
 
 # Enable data collection modules
 filebeat --path.config /etc/filebeat modules enable osquery zeek #suricata
@@ -134,6 +134,8 @@ echo "[$(DATE)] [Info] [Filebeat] Reload daemon and start Filebeat..."
 /bin/systemctl daemon-reload &> /dev/null
 /bin/systemctl enable filebeat &> /dev/null
 /bin/systemctl start filebeat &> /dev/null
+filebeat setup
+filebeat -e
 
 # ------------------------------ Packetbeat ------------------------------------
 # Install Packetbeat

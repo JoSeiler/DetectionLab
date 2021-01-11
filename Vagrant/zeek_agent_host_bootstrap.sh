@@ -130,10 +130,10 @@ install_zeek_agent() {
   # Build the project
   cmake --build . -j2
   # Start project in the background
-  nohup ./zeek-agent &
+  #nohup ./zeek-agent &
   # Get PID of last executed command type and assign it to zeek-agent
-  bg_pid=$!
-  echo "${bg_pid}" > zeek-agent.pid
+  #bg_pid=$!
+  #echo "${bg_pid}" > zeek-agent.pid
   # Run the tests
   cmake --build . --target zeek_agent_tests
   cd /home/vagrant/
