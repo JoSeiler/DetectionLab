@@ -125,9 +125,8 @@ EOF
 
     mkdir -p /home/vagrant/projects/
     cd /home/vagrant/projects/
-    git clone https://github.com/Wajihulhassan/zeek-agent.git --recursive
+    git clone https://github.com/zeek/zeek-agent --recursive
     cd zeek-agent/
-    git checkout announce_ipaddr
     mkdir ./build/
     cd  build
     cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DZEEK_AGENT_ENABLE_INSTALL:BOOL=ON -DZEEK_AGENT_ENABLE_TESTS:BOOL=ON -DZEEK_AGENT_ZEEK_COMPATIBILITY:STRING="3.1" /home/vagrant/projects/zeek-agent/
