@@ -28,6 +28,7 @@ sed -i "2ideb mirror://mirrors.ubuntu.com/mirrors.txt bionic main restricted uni
 
 # Change keyboard layout to German
 L='de' && sudo sed -i 's/XKBLAYOUT=\"\w*"/XKBLAYOUT=\"'$L'\"/g' /etc/default/keyboard
+service keyboard-setup restart
 
 apt_install_prerequisites() {
   echo "[$(date +%H:%M:%S)]: Adding apt repositories..."
