@@ -193,27 +193,27 @@ install_zeek() {
 
   ## custom download ######################
 
-  cd ~
-  wget https://download.zeek.org/zeek-3.1.3.tar.gz
-  tar xzf zeek-3.1.3.tar.gz
-  cd zeek-3.1.3
-  ./configure --prefix=/opt/zeek/
-  make -j4
-  sudo make install
-  # Update APT repositories
-  apt-get -qq -ym update
-  # Install crudini
-  apt-get -qq -ym install crudini
+  #cd ~
+  #wget https://download.zeek.org/zeek-3.1.3.tar.gz
+  #tar xzf zeek-3.1.3.tar.gz
+  #cd zeek-3.1.3
+  #./configure --prefix=/opt/zeek/
+  #make -j4
+  #sudo make install
+  ## Update APT repositories
+  #apt-get -qq -ym update
+  ## Install crudini
+  #apt-get -qq -ym install crudini
 
   ##############################
 
-  #   sh -c "echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_20.04/ /' > /etc/apt/sources.list.d/security:zeek.list"
-  # wget -nv https://download.opensuse.org/repositories/security:zeek/xUbuntu_20.04/Release.key -O /tmp/Release.key
-  # apt-key add - </tmp/Release.key &>/dev/null
-  # # Update APT repositories
-  # apt-get -qq -ym update
-  # # Install tools to build and configure Zeek
-  # apt-get -qq -ym install zeek crudini
+  sh -c "echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_20.04/ /' > /etc/apt/sources.list.d/security:zeek.list"
+  wget -nv https://download.opensuse.org/repositories/security:zeek/xUbuntu_20.04/Release.key -O /tmp/Release.key
+  apt-key add - </tmp/Release.key &>/dev/null
+  # Update APT repositories
+  apt-get -qq -ym update
+  # Install tools to build and configure Zeek
+  apt-get -qq -ym install zeek crudini
 
   ##############################
 
