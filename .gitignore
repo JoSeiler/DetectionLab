@@ -13,3 +13,9 @@ inventory.yml.bak
 *.box
 manifest.xml
 HyperV/.vagrant/*
+.idea/.gitignore
+.idea/DetectionLab.iml
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
