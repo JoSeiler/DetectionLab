@@ -15,10 +15,6 @@ echo "apt-fast apt-fast/dlflag boolean true" | debconf-set-selections
 
 sed -i "2ideb mirror://mirrors.ubuntu.com/mirrors.txt focal main restricted universe multiverse\ndeb mirror://mirrors.ubuntu.com/mirrors.txt focal-updates main restricted universe multiverse\ndeb mirror://mirrors.ubuntu.com/mirrors.txt focal-backports main restricted universe multiverse\ndeb mirror://mirrors.ubuntu.com/mirrors.txt focal-security main restricted universe multiverse" /etc/apt/sources.list
 
-# Change keyboard layout to German
-L='de' && sudo sed -i 's/XKBLAYOUT=\"\w*"/XKBLAYOUT=\"'$L'\"/g' /etc/default/keyboard
-service keyboard-setup restart
-
 apt_install_prerequisites() {
   echo "[$(date +%H:%M:%S)]: Adding apt repositories..."
   # Add repository for apt-fast
@@ -112,48 +108,56 @@ fix_eth1_static_ip() {
 }
 
 install_zeek_agent() {
-  echo "[$(date +%H:%M:%S)]: Installing zeek-agent..."
-  # Copy agent config
-  mkdir /etc/zeek-agent/
-  cp /vagrant/resources/zeek_agent/config.json /etc/zeek-agent/
-  # Create directory where zeek-agent stores log output
-  mkdir /var/log/zeek/
-  # Obtain the source code
-  mkdir -p /home/vagrant/projects/ &&
-  cd /home/vagrant/projects/
-  git clone https://github.com/zeek/zeek-agent --recursive
-  # Create build folder
-  cd zeek-agent/
-  mkdir ./build/
-  # Configure the project: option#1 - Configure with the system compiler
-  cd  build
-  cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DZEEK_AGENT_ENABLE_INSTALL:BOOL=ON -DZEEK_AGENT_ENABLE_TESTS:BOOL=ON -DZEEK_AGENT_ZEEK_COMPATIBILITY:STRING="3.1" /home/vagrant/projects/zeek-agent/
-  # Build the project
-  cmake --build . -j2
-  # Start project in the background
-  #nohup ./zeek-agent &
-  # Get PID of last executed command type and assign it to zeek-agent
-  #bg_pid=$!
-  #echo "${bg_pid}" > zeek-agent.pid
-  # Run the tests
-  cmake --build . --target zeek_agent_tests
-  cd /home/vagrant/
-  chown -R vagrant:vagrant ./projects
+    sudo mkdir /etc/zeek-agent/
+
+    sudo cat << 'EOF' >> /etc/zeek-agent/config.json
+{
+  "server_address": "192.168.38.105",
+  "server_port": 9999,
+  "log_folder": "/var/log/zeek",
+  "max_queued_row_count": 5000,
+  "osquery_extensions_socket": "/var/osquery/osquery.em",
+  "group_list": []
+}
+EOF
+
+    sudo mkdir /var/log/zeek/
+
+    mkdir -p /home/vagrant/projects/
+    cd /home/vagrant/projects/
+    git clone https://github.com/Wajihulhassan/zeek-agent.git --recursive
+    cd zeek-agent/
+    git checkout announce_ipaddr
+    mkdir ./build/
+    cd  build
+    cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DZEEK_AGENT_ENABLE_INSTALL:BOOL=ON -DZEEK_AGENT_ENABLE_TESTS:BOOL=ON -DZEEK_AGENT_ZEEK_COMPATIBILITY:STRING="3.1" /home/vagrant/projects/zeek-agent/
+    cmake --build . -j2
+    nohup ./zeek-agent &
+    bg_pid=$!
+    echo "${bg_pid}" > zeek-agent.pid
+
+    cd /home/vagrant/
+    chown -R vagrant:vagrant ./projects
 }
 
 install_config_auditd() {
-  # Copy configuration for system calls
-  cp /vagrant/resources/auditd/10-zeek_agent.rules /etc/audit/rules.d/
-  # Enable and run auditd daemon
-  sudo systemctl enable --now auditd
-  # Set AF UNIX audisp plugin to active
-  sudo sed -i 's/no/yes/g' /etc/audisp/plugins.d/af_unix.conf
-  # Copy config
-  sudo cp /vagrant/resources/auditd/auditd.conf /etc/audit/
-  # Restart auditd service
-  sudo systemctl restart auditd
-  # Enable auditing and raise backlog limit
-  sudo auditctl -e1 -b 1024
+
+    sudo cat << 'EOF' >> /etc/audit/rules.d/10-zeek_agent.rules
+-a exit,always -F arch=b64 -S execve
+-a exit,always -F arch=b64 -S execveat
+-a exit,always -F arch=b64 -S fork
+-a exit,always -F arch=b64 -S vfork
+-a exit,always -F arch=b64 -S clone
+-a exit,always -F arch=b64 -S connect
+-a exit,always -F arch=b64 -S bind
+-a exit,always -F arch=b64 -S open
+-a exit,always -F arch=b64 -S openat
+EOF
+    sudo systemctl enable --now auditd
+    sudo sed -i 's/no/yes/g' /etc/audisp/plugins.d/af_unix.conf
+    sudo cp /vagrant/resources/auditd/auditd.conf /etc/audit/
+    sudo systemctl restart auditd
+    sudo auditctl -e1 -b 1024
 }
 
 install_splunk_forwarder() {
@@ -184,7 +188,7 @@ main() {
   fix_eth1_static_ip
   install_config_auditd
   install_zeek_agent
-  #install_splunk_forwarder
+  install_splunk_forwarder
   postinstall_tasks
 }
 
