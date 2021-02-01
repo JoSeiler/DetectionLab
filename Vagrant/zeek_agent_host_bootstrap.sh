@@ -187,7 +187,7 @@ main() {
   fix_eth1_static_ip
   install_config_auditd
   install_zeek_agent
-  #install_splunk_forwarder
+  install_splunk_forwarder
   postinstall_tasks
 }
 
