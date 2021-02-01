@@ -15,3 +15,9 @@ manifest.xml
 HyperV/.vagrant/*
 logger_variables.sh
 ESXi/Packer/variables.json
+.idea/.gitignore
+.idea/DetectionLab.iml
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml

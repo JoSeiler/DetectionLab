@@ -347,6 +347,7 @@ install_zeek() {
   zkg refresh
   zkg autoconfig
   zkg install --force salesforce/ja3
+  zkg install --force json-streaming-logs
   # Load Zeek scripts
   echo '
   @load protocols/ftp/software
