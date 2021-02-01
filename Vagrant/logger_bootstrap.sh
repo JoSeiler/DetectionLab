@@ -324,10 +324,10 @@ install_fleet_import_osquery_config() {
 
     # Add Splunk monitors for Fleet
     # Files must exist before splunk will add a monitor
-    touch /var/log/fleet/osquery_result
-    touch /var/log/fleet/osquery_status
-    /opt/splunk/bin/splunk add monitor "/var/log/fleet/osquery_result" -index osquery -sourcetype 'osquery:json' -auth 'admin:changeme' --accept-license --answer-yes --no-prompt
-    /opt/splunk/bin/splunk add monitor "/var/log/fleet/osquery_status" -index osquery-status -sourcetype 'osquery:status' -auth 'admin:changeme' --accept-license --answer-yes --no-prompt
+    #touch /var/log/fleet/osquery_result
+    #touch /var/log/fleet/osquery_status
+    #/opt/splunk/bin/splunk add monitor "/var/log/fleet/osquery_result" -index osquery -sourcetype 'osquery:json' -auth 'admin:changeme' --accept-license --answer-yes --no-prompt
+    #/opt/splunk/bin/splunk add monitor "/var/log/fleet/osquery_status" -index osquery-status -sourcetype 'osquery:status' -auth 'admin:changeme' --accept-license --answer-yes --no-prompt
   fi
 }
 
@@ -399,16 +399,16 @@ install_zeek() {
   systemctl start zeek
 
   # Configure the Splunk inputs
-  mkdir -p /opt/splunk/etc/apps/Splunk_TA_bro/local && touch /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf
-  crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager index zeek
-  crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager sourcetype zeek:json
-  crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager whitelist '.*\.log$'
-  crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager blacklist '.*(communication|stderr)\.log$'
-  crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager disabled 0
+  #mkdir -p /opt/splunk/etc/apps/Splunk_TA_bro/local && touch /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf
+  #crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager index zeek
+  #crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager sourcetype zeek:json
+  #crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager whitelist '.*\.log$'
+  #crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager blacklist '.*(communication|stderr)\.log$'
+  #crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager disabled 0
 
   # Ensure permissions are correct and restart splunk
-  chown -R splunk:splunk /opt/splunk/etc/apps/Splunk_TA_bro
-  /opt/splunk/bin/splunk restart
+  #chown -R splunk:splunk /opt/splunk/etc/apps/Splunk_TA_bro
+  #/opt/splunk/bin/splunk restart
 
   # Verify that Zeek is running
   if ! pgrep -f zeek >/dev/null; then
@@ -553,8 +553,9 @@ install_guacamole() {
 
 postinstall_tasks() {
   # Include Splunk and Zeek in the PATH
-  echo export PATH="$PATH:/opt/splunk/bin:/opt/zeek/bin" >>~/.bashrc
-  echo "export SPLUNK_HOME=/opt/splunk" >>~/.bashrc
+  #echo export PATH="$PATH:/opt/splunk/bin:/opt/zeek/bin" >>~/.bashrc
+  #echo "export SPLUNK_HOME=/opt/splunk" >>~/.bashrc
+  echo export PATH="$PATH:/opt/zeek/bin" >>~/.bashrc
   # Ping DetectionLab server for usage statistics
   curl -s -A "DetectionLab-logger" "https:/ping.detectionlab.network/logger" || echo "Unable to connect to ping.detectionlab.network"
 }
@@ -564,11 +565,11 @@ main() {
   modify_motd
   test_prerequisites
   fix_eth1_static_ip
-  install_splunk
+  #install_splunk
   download_palantir_osquery_config
   install_fleet_import_osquery_config
-  install_velociraptor
-  install_suricata
+  #install_velociraptor
+  #install_suricata
   install_zeek
   install_guacamole
   postinstall_tasks
