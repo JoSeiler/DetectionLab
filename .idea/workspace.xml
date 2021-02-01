@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" ENABLED="true" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="89d81363-b1b3-4fb6-a44f-e4d40c88c201" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="zeek-agent" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1lvAnBnQoj9NUKAGvrkvcy1zcGr" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_MARK_IGNORED_FILES_AS_EXCLUDED" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Jojo\Desktop\SecurityLab\DetectionLab\Vagrant\resources" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration>C:\Users\Jojo\AppData\Roaming\Subversion</configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="89d81363-b1b3-4fb6-a44f-e4d40c88c201" name="Default Changelist" comment="" />
+      <created>1608467357538</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1608467357538</updated>
+      <workItem from="1608467373854" duration="549000" />
+      <workItem from="1608467940553" duration="2309000" />
+      <workItem from="1608560735036" duration="27163000" />
+      <workItem from="1609244560535" duration="9535000" />
+      <workItem from="1609590393022" duration="11149000" />
+      <workItem from="1609618541078" duration="143000" />
+      <workItem from="1609764757051" duration="794000" />
+      <workItem from="1609765590695" duration="131000" />
+      <workItem from="1609765747741" duration="3902000" />
+      <workItem from="1609844193962" duration="17567000" />
+      <workItem from="1609960969035" duration="1495000" />
+      <workItem from="1610195590396" duration="10979000" />
+      <workItem from="1610363578272" duration="7005000" />
+      <workItem from="1610444037937" duration="2602000" />
+      <workItem from="1610450100606" duration="457000" />
+      <workItem from="1610459584735" duration="1988000" />
+      <workItem from="1610467826378" duration="7100000" />
+      <workItem from="1612189987272" duration="438000" />
+      <workItem from="1612190458409" duration="1988000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="522" y="215" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1609602834857">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="522" y="215" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824/-1920.0.1920.1040@0.0.1536.824" timestamp="1609251657733" />
+    <state x="522" y="215" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1609602834857" />
+    <state x="277" y="55" key="SettingsEditor" timestamp="1608467923544">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="277" y="55" key="SettingsEditor/0.0.1536.824/-1920.0.1920.1040@0.0.1536.824" timestamp="1608467923544" />
+  </component>
+</project>
