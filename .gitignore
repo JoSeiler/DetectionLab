@@ -1,4 +1,4 @@
-Vagrant/.vagrant/*
+agrant/.vagrant/*
 Vagrant/vagrant*.log
 Packer/packer_cache/*
 Packer/packer_build.log
@@ -14,9 +14,4 @@ inventory.yml.bak
 manifest.xml
 HyperV/.vagrant/*
 logger_variables.sh
-.idea/.gitignore
-.idea/DetectionLab.iml
-.idea/inspectionProfiles/
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
+ESXi/Packer/variables.json

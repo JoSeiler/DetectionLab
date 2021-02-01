@@ -324,10 +324,10 @@ install_fleet_import_osquery_config() {
 
     # Add Splunk monitors for Fleet
     # Files must exist before splunk will add a monitor
-    #touch /var/log/fleet/osquery_result
-    #touch /var/log/fleet/osquery_status
-    #/opt/splunk/bin/splunk add monitor "/var/log/fleet/osquery_result" -index osquery -sourcetype 'osquery:json' -auth 'admin:changeme' --accept-license --answer-yes --no-prompt
-    #/opt/splunk/bin/splunk add monitor "/var/log/fleet/osquery_status" -index osquery-status -sourcetype 'osquery:status' -auth 'admin:changeme' --accept-license --answer-yes --no-prompt
+    touch /var/log/fleet/osquery_result
+    touch /var/log/fleet/osquery_status
+    /opt/splunk/bin/splunk add monitor "/var/log/fleet/osquery_result" -index osquery -sourcetype 'osquery:json' -auth 'admin:changeme' --accept-license --answer-yes --no-prompt
+    /opt/splunk/bin/splunk add monitor "/var/log/fleet/osquery_status" -index osquery-status -sourcetype 'osquery:status' -auth 'admin:changeme' --accept-license --answer-yes --no-prompt
   fi
 }
 
@@ -347,16 +347,13 @@ install_zeek() {
   zkg refresh
   zkg autoconfig
   zkg install --force salesforce/ja3
-  zkg install --force json-streaming-logs
-  # Set symbolic link to be able to run zeek framework directly out of local respository clone (rather than Zeek's site folder)
-  ln -s /home/vagrant/projects/zeek-agent-framework/zeek-agent /opt/zeek/share/zeek/site/zeek-agent
   # Load Zeek scripts
   echo '
   @load protocols/ftp/software
   @load protocols/smtp/software
   @load protocols/ssh/software
   @load protocols/http/software
-  @load policy/tuning/json-logs
+  @load tuning/json-logs
   @load policy/integration/collective-intel
   @load policy/frameworks/intel/do_notice
   @load frameworks/intel/seen
@@ -366,10 +363,6 @@ install_zeek() {
   @load policy/protocols/conn/vlan-logging
   @load policy/protocols/conn/mac-logging
   @load ja3
-  @load json-streaming-logs
-  #@load zeek-agent/examples/auditd
-  #@load zeek-agent/examples/osquery
-
   redef Intel::read_files += {
     "/opt/zeek/etc/intel.dat"
   };
@@ -383,6 +376,17 @@ install_zeek() {
   crudini --set $NODECFG proxy host localhost
 
   # Setup $CPUS numbers of Zeek workers
+  # AWS only has a single interface (eth1), so don't monitor eth0 if we're in AWS
+  if ! curl -s 169.254.169.254 --connect-timeout 2 >/dev/null; then
+  # TL;DR of ^^^: if you can't reach the AWS metadata service, you're not running in AWS
+  # Therefore, it's ok to add this.
+    crudini --set $NODECFG worker-eth0 type worker
+    crudini --set $NODECFG worker-eth0 host localhost
+    crudini --set $NODECFG worker-eth0 interface eth0
+    crudini --set $NODECFG worker-eth0 lb_method pf_ring
+    crudini --set $NODECFG worker-eth0 lb_procs "$(nproc)"
+  fi
+
   crudini --set $NODECFG worker-eth1 type worker
   crudini --set $NODECFG worker-eth1 host localhost
   crudini --set $NODECFG worker-eth1 interface eth1
@@ -395,16 +399,16 @@ install_zeek() {
   systemctl start zeek
 
   # Configure the Splunk inputs
-  #mkdir -p /opt/splunk/etc/apps/Splunk_TA_bro/local && touch /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf
-  #crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager index zeek
-  #crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager sourcetype bro:json
-  #crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager whitelist '.*\.log$'
-  #crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager blacklist '.*(communication|stderr)\.log$'
-  #crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager disabled 0
+  mkdir -p /opt/splunk/etc/apps/Splunk_TA_bro/local && touch /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf
+  crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager index zeek
+  crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager sourcetype zeek:json
+  crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager whitelist '.*\.log$'
+  crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager blacklist '.*(communication|stderr)\.log$'
+  crudini --set /opt/splunk/etc/apps/Splunk_TA_bro/local/inputs.conf monitor:///opt/zeek/spool/manager disabled 0
 
   # Ensure permissions are correct and restart splunk
-  #chown -R splunk:splunk /opt/splunk/etc/apps/Splunk_TA_bro
-  #/opt/splunk/bin/splunk restart
+  chown -R splunk:splunk /opt/splunk/etc/apps/Splunk_TA_bro
+  /opt/splunk/bin/splunk restart
 
   # Verify that Zeek is running
   if ! pgrep -f zeek >/dev/null; then
@@ -412,16 +416,6 @@ install_zeek() {
     exit 1
   fi
 }
-
-install_zeek_agent_framework() {
-  echo "[$(date +%H:%M:%S)]: Installing zeek-agent-framework..."
-  mkdir -p /home/vagrant/projects/
-  cd /home/vagrant/projects/
-  git clone https://github.com/zeek/zeek-agent-framework
-  cd /home/vagrant/
-  chown -R vagrant:vagrant projects
-}
-
 
 install_velociraptor() {
   echo "[$(date +%H:%M:%S)]: Installing Velociraptor..."
@@ -480,12 +474,11 @@ install_suricata() {
   suricata-update enable-source ptresearch/attackdetection
 
   # Configure the Splunk inputs
-  #mkdir -p /opt/splunk/etc/apps/SplunkLightForwarder/local && touch /opt/splunk/etc/apps/SplunkLightForwarder/local/inputs.conf
-  #crudini --set /opt/splunk/etc/apps/SplunkLightForwarder/local/inputs.conf monitor:///var/log/suricata index suricata
-  #crudini --set /opt/splunk/etc/apps/SplunkLightForwarder/local/inputs.conf monitor:///var/log/suricata sourcetype suricata:json
-  #crudini --set /opt/splunk/etc/apps/SplunkLightForwarder/local/inputs.conf monitor:///var/log/suricata whitelist 'eve.json'
-  #crudini --set /opt/splunk/etc/apps/SplunkLightForwarder/local/inputs.conf monitor:///var/log/suricata disabled 0
-  #crudini --set /opt/splunk/etc/apps/SplunkLightForwarder/local/props.conf json_suricata TRUNCATE 0
+  crudini --set /opt/splunk/etc/apps/search/local/inputs.conf monitor:///var/log/suricata index suricata
+  crudini --set /opt/splunk/etc/apps/search/local/inputs.conf monitor:///var/log/suricata sourcetype suricata:json
+  crudini --set /opt/splunk/etc/apps/search/local/inputs.conf monitor:///var/log/suricata whitelist 'eve.json'
+  crudini --set /opt/splunk/etc/apps/search/local/inputs.conf monitor:///var/log/suricata disabled 0
+  crudini --set /opt/splunk/etc/apps/search/local/props.conf suricata:json TRUNCATE 0
 
   # Update suricata and restart
   suricata-update
@@ -560,16 +553,10 @@ install_guacamole() {
 
 postinstall_tasks() {
   # Include Splunk and Zeek in the PATH
-  #echo export PATH="$PATH:/opt/splunk/bin:/opt/zeek/bin" >>~/.bashrc
-  #echo "export SPLUNK_HOME=/opt/splunk" >>~/.bashrc
-  echo export PATH="$PATH:/opt/zeek/bin" >>~/.bashrc
-  # Include zeek-agent-framework in ZEEKPATH
-  echo export ZEEKPATH="/home/vagrant/projects/zeek-agent-framework/:$(zeek-config --zeekpath)" >>~/.bashrc
+  echo export PATH="$PATH:/opt/splunk/bin:/opt/zeek/bin" >>~/.bashrc
+  echo "export SPLUNK_HOME=/opt/splunk" >>~/.bashrc
   # Ping DetectionLab server for usage statistics
   curl -s -A "DetectionLab-logger" "https:/ping.detectionlab.network/logger" || echo "Unable to connect to ping.detectionlab.network"
-  # Change keyboard layout to German
-  L='de' && sudo sed -i 's/XKBLAYOUT=\"\w*"/XKBLAYOUT=\"'$L'\"/g' /etc/default/keyboard
-  service keyboard-setup restart
 }
 
 main() {
@@ -577,12 +564,11 @@ main() {
   modify_motd
   test_prerequisites
   fix_eth1_static_ip
-  #install_splunk
+  install_splunk
   download_palantir_osquery_config
   install_fleet_import_osquery_config
-  #install_velociraptor
-  #install_suricata
-  install_zeek_agent_framework
+  install_velociraptor
+  install_suricata
   install_zeek
   install_guacamole
   postinstall_tasks
