@@ -6,7 +6,18 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="89d81363-b1b3-4fb6-a44f-e4d40c88c201" name="Default Changelist" comment="" />
+    <list default="true" id="89d81363-b1b3-4fb6-a44f-e4d40c88c201" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vagrant/.vagrant/machines/dc/virtualbox/vagrant_cwd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vagrant/.vagrant/machines/ubu2004/virtualbox/vagrant_cwd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vagrant/.vagrant/machines/wef/virtualbox/vagrant_cwd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vagrant/.vagrant/machines/win10/virtualbox/vagrant_cwd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vagrant/.vagrant/rgloader/loader.rb" beforeDir="false" afterPath="$PROJECT_DIR$/Vagrant/.vagrant/rgloader/loader.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vagrant/Vagrantfile" beforeDir="false" afterPath="$PROJECT_DIR$/Vagrant/Vagrantfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vagrant/logger_bootstrap.sh" beforeDir="false" afterPath="$PROJECT_DIR$/Vagrant/logger_bootstrap.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vagrant/scripts/install-zeek-agent.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/Vagrant/scripts/install-zeek-agent.ps1" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,6 +83,7 @@
       <workItem from="1610467826378" duration="7100000" />
       <workItem from="1612189987272" duration="438000" />
       <workItem from="1612190458409" duration="2664000" />
+      <workItem from="1612259663131" duration="8478000" />
     </task>
     <servers />
   </component>

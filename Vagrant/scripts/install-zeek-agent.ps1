@@ -19,11 +19,34 @@ Expand-Archive -LiteralPath C:\Users\vagrant\Downloads\zeek-agent-master.zip -De
 
 # Create build folder
 cd C:\Users\vagrant\projects\zeek-agent-master\
-mkdir .\build\
+mkdir build
 # Configure the project
 cd build
-cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DZEEK_AGENT_ENABLE_INSTALL:BOOL=ON -DZEEK_AGENT_ENABLE_TESTS:BOOL=ON -DZEEK_AGENT_ZEEK_COMPATIBILITY:STRING="3.1" /home/vagrant/projects/zeek-agent/
+
+# Win10 build
+#cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DZEEK_AGENT_ENABLE_INSTALL:BOOL=ON -DZEEK_AGENT_ENABLE_TESTS:BOOL=ON -DZEEK_AGENT_ZEEK_COMPATIBILITY:STRING="3.1" C:\Users\vagrant\projects\zeek-agent-master\build
+#cmake -DCMAKE_VERBOSE_MAKEFILE:BOOL=true -DCMAKE_INSTALL_PREFIX:PATH='C:\Users\vagrant\projects\zeek-agent-master\install' -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DZEEK_AGENT_ENABLE_DOCUMENTATION:BOOL=false -DZEEK_AGENT_ENABLE_INSTALL:BOOL=true -DZEEK_AGENT_ENABLE_TESTS:BOOL=true -DZEEK_AGENT_ENABLE_SANITIZERS:BOOL=false -DZEEK_AGENT_ZEEK_COMPATIBILITY:STRING="3.1" C:\Users\vagrant\projects\zeek-agent-master\
+
+# Jojo PC build
+#cmake -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DZEEK_AGENT_ENABLE_INSTALL:BOOL=ON -DZEEK_AGENT_ENABLE_TESTS:BOOL=ON -DZEEK_AGENT_ZEEK_COMPATIBILITY:STRING="3.1" C:\Users\Jojo\Desktop\SecurityLab\zeek-agent\
+#cmake -DCMAKE_VERBOSE_MAKEFILE:BOOL=true -DCMAKE_INSTALL_PREFIX:PATH='C:\Users\Jojo\Desktop\SecurityLab\zeek-agent\install' -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DZEEK_AGENT_ENABLE_DOCUMENTATION:BOOL=false -DZEEK_AGENT_ENABLE_INSTALL:BOOL=true -DZEEK_AGENT_ENABLE_TESTS:BOOL=true -DZEEK_AGENT_ENABLE_SANITIZERS:BOOL=false -DZEEK_AGENT_ZEEK_COMPATIBILITY:STRING="3.1" C:\Users\Jojo\Desktop\SecurityLab\zeek-agent\
+
 # Build the project
 cmake --build . -j2
 
 # Run the tests
+cmake --build . --target zeek_agent_tests
+
+# Create packages
+# Install Zeek Agent
+cmake --build . --target install
+
+# Configure the packaging project
+mkdir package_build
+cd package_build
+#cmake -DZEEK_AGENT_ZEEK_COMPATIBILITY:STRING="3.1" -DZEEK_AGENT_INSTALL_PATH:PATH="C:\Users\Jojo\Desktop\SecurityLab\zeek-agent\install" -DCMAKE_INSTALL_PREFIX:PATH="C:\\Program Files\\Corelight\\Zeek Agent" C:\Users\Jojo\Desktop\SecurityLab\zeek-agent\packaging
+
+cmake -DZEEK_AGENT_INSTALL_PATH:PATH="C:\Users\Jojo\Desktop\SecurityLab\zeek-agent\install" C:\Users\Jojo\Desktop\SecurityLab\zeek-agent\packaging
+
+mkdir install
+export DESTDIR="$(C:\Users\Jojo\Desktop\SecurityLab\zeek-agent\install)"

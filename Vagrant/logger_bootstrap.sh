@@ -582,13 +582,13 @@ main() {
   test_prerequisites
   fix_eth1_static_ip
   #install_splunk
-  download_palantir_osquery_config
-  install_fleet_import_osquery_config
+  #download_palantir_osquery_config
+  #install_fleet_import_osquery_config
   #install_velociraptor
   #install_suricata
   install_zeek_agent_framework
   install_zeek
-  install_guacamole
+  #install_guacamole
   postinstall_tasks
 }
 

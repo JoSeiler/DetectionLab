@@ -1,4 +1,4 @@
-agrant/.vagrant/*
+Vagrant/.vagrant/*
 Vagrant/vagrant*.log
 Packer/packer_cache/*
 Packer/packer_build.log
@@ -21,3 +21,4 @@ ESXi/Packer/variables.json
 .idea/misc.xml
 .idea/modules.xml
 .idea/vcs.xml
+.idea/workspace.xml
